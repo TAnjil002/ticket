@@ -1,0 +1,132 @@
+/* Custom Styling */
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+#seat-container button {
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  background: #e5e7eb;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+#seat-container button:hover {
+  background: #10b981;
+  color: white;
+  transform: scale(1.1);
+}
+
+#seat-container button.selected {
+  background: #16a34a;
+  color: white;
+  border: 2px solid #059669;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+}
+
+footer {
+  background: #111;
+}
+
+/* Hero + Stats Custom Layout */
+section.relative {
+  position: relative;
+}
+
+section.relative .absolute {
+  position: absolute;
+}
+
+/* Stats card hover & animation */
+.bg-white.shadow-lg {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bg-white.shadow-lg:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Google Map Responsive Fix */
+iframe {
+  display: block;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .card {
+    height: 40px;
+    width: 50px;
+  }
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-close {
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* Payment Method Button Styles */
+.payment-method-btn {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.payment-method-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.payment-method-btn.active-payment {
+  border-color: #22c55e !important;
+  background-color: #f0fdf4;
+}
+
+/* Alert Styles */
+.alert-info {
+  background-color: #e0f2fe;
+  border: 1px solid #0ea5e9;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+/* Success notification animation */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.fixed.top-4.right-4 {
+  animation: slideIn 0.3s ease-out;
+}

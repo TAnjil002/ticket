@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>P-Ticket</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://js.stripe.com/v3/"></script>
+  <!-- jsPDF for PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+  <!-- Navbar -->
+  <nav class="flex justify-between items-center px-8 py-4 bg-white shadow-md">
+    <h1 class="text-2xl font-bold text-black"><span class="text-green-600">P</span>-Ticket</h1>
+    <ul class="flex space-x-6 hidden md:flex">
+      <li><a href="#banner" class="hover:text-green-600">Home</a></li>
+      <li><a href="#offer" class="hover:text-green-600">About</a></li>
+      <li><a href="#destination" class="hover:text-green-600">Destination</a></li>
+      <li><a href="#" class="hover:text-green-600">Search</a></li>
+    </ul>
+
+    <div class="flex items-center space-x-2">
+      <div id="auth-buttons" class="">
+        <button id="login-btn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Login</button>
+        <button id="signup-btn" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300">Sign Up</button>
+      </div>
+
+      <div id="user-profile" class="hidden items-center space-x-3">
+        <span id="welcome-msg" class="font-medium">Welcome, User!</span>
+        <button id="logout-btn" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Logout</button>
+      </div>
+    </div>
+
+    <button class="md:hidden" id="menu-toggle">☰</button>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="banner" class="relative bg-white">
+    <div class="container mx-auto relative">
+      <img src="images/banner.png" alt="Bus Banner" class="rounded-2xl w-full shadow-lg object-cover h-[500px]" onerror="this.onerror=null;this.src='https://placehold.co/1200x500/22c55e/ffffff?text=P-Ticket+Banner';">
+  
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+        <h2 class="text-3xl md:text-5xl font-bold text-white drop-shadow-lg leading-tight">
+          End-to-End Travel with <br>
+          <span class="text-green-500">P Paribahan</span>
+        </h2>
+        <button id="buy-tickets" class="mt-6 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-md">
+          Buy Tickets
+        </button>
+      </div>
+    </div>
+  
+    <div id="card" class="absolute left-1/2 transform -translate-x-1/2 bottom-[-60px] w-full md:w-4/5">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 justify-center">
+        <div class="bg-white rounded-2xl shadow-lg flex items-center justify-between px-6 py-4 relative overflow-hidden h-[90px] w-[200px]">
+          <div class="flex items-center space-x-4">
+            <img src="images/people.png" alt="User Icon" class="w-16 h-16" onerror="this.onerror=null;this.src='https://placehold.co/64x64/ffffff/22c55e?text=Users';">
+            <div>
+              <h3 class="text-3xl font-bold text-green-600 leading-tight">500K+</h3>
+              <p class="text-gray-600 text-sm font-medium">Registered Users</p>
+            </div>
+          </div>
+          <div class="absolute bottom-0 left-0 w-full h-3 bg-gradient-to-r from-green-400 to-green-600 rounded-b-2xl"></div>
+        </div>
+  
+        <div class="bg-white rounded-2xl shadow-lg flex items-center justify-between px-6 py-4 relative overflow-hidden h-[90px] w-[200px]">
+          <div class="flex items-center space-x-4">
+            <img src="images/ticket-cupon.png" alt="Ticket Icon" class="w-16 h-16" onerror="this.onerror=null;this.src='https://placehold.co/64x64/ffffff/ec4899?text=Tickets';">
+            <div>
+              <h3 class="text-3xl font-bold text-pink-500 leading-tight">1.7 Lakh+</h3>
+              <p class="text-gray-600 text-sm font-medium">Tickets Sold</p>
+            </div>
+          </div>
+          <div class="absolute bottom-0 left-0 w-full h-3 bg-gradient-to-r from-pink-400 to-pink-600 rounded-b-2xl"></div>
+        </div>
+  
+        <div class="bg-white rounded-2xl shadow-lg flex items-center justify-between px-6 py-4 relative overflow-hidden h-[90px] w-[200px]">
+          <div class="flex items-center space-x-4">
+            <img src="images/bus-icon.png" alt="Bus Icon" class="w-16 h-16" onerror="this.onerror=null;this.src='https://placehold.co/64x64/ffffff/eab308?text=Bus';">
+            <div>
+              <h3 class="text-3xl font-bold text-yellow-500 leading-tight">80K+</h3>
+              <p class="text-gray-600 text-sm font-medium">Rental Partners</p>
+            </div>
+          </div>
+          <div class="absolute bottom-0 left-0 w-full h-3 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-b-2xl"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="mt-40 md:mt-48"></div>
+
+  <!-- Offers Section -->
+  <section id="offer" class="text-center py-10">
+    <h2 class="text-3xl font-bold mb-6">Best offers for you</h2>
+    <div class="flex flex-col md:flex-row justify-center gap-6 px-6">
+      <div class="bg-yellow-400 text-black p-6 rounded-lg shadow-lg w-full md:w-1/4">
+        <h3 class="text-2xl font-bold">15% OFF</h3>
+        <p>on your next purchase</p>
+        <p class="font-semibold">Code: NEW15</p>
+      </div>
+      <div class="bg-pink-400 text-white p-6 rounded-lg shadow-lg w-full md:w-1/4">
+        <h3 class="text-2xl font-bold">20% OFF</h3>
+        <p>on yoimages/banner.pngur next purchase</p>
+        <p class="font-semibold">Code: COUPLE20</p>
+      </div>
+    </div>
+    <button class="mt-8 bg-green-500 text-white px-5 py-2 rounded-md hover:bg-green-600">See All Offers</button>
+  </section>
+
+  <!-- Bus Info -->
+  <section class="py-10 px-6 text-center">
+    <h2 class="text-3xl font-bold">P.H Paribahan</h2>
+    <p class="text-gray-500 mt-2">P.H Paribahan | Coach: 009-WEB | AC_Business</p>
+
+    <div class="mt-6 bg-white shadow-lg rounded-lg p-6 max-w-xl mx-auto">
+      <div class="flex justify-between">
+        <div>
+          <p><strong>Route:</strong> Dhaka - Sylhet</p>
+          <p><strong>Departure:</strong> 9:00 PM</p>
+        </div>
+        <div class="text-right">
+          <img src="images/fare.png" alt="Bus Icon" class="w-6 h-6" onerror="this.onerror=null;this.src='https://placehold.co/24x24/ffffff/22c55e?text=Fare';">
+          <p class="text-green-600 font-bold">550 Taka</p>
+          <p class="text-sm text-gray-500">Per Seat</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seat Selection -->
+  <section id="seat-section" class="py-10 bg-gray-100">
+    <div class="container mx-auto grid md:grid-cols-2 gap-8 px-4">
+      <!-- Seats -->
+      <div>
+        <h3 class="font-semibold mb-4">Select Your Seat(s) <span class="text-sm text-gray-500">(Max 4 seats)</span></h3>
+        <div id="seat-container" class="grid grid-cols-4 gap-3">
+          <!-- Seats generated via JS -->
+        </div>
+      </div>
+
+      <!-- Booking Info -->
+      <div id="booking-area" class="bg-white p-6 rounded-lg shadow-md">
+        
+        <div id="booking-form" class="hidden">
+          <h3 class="font-semibold mb-4">Booking Summary</h3>
+          <p>Seat(s): <span id="selected-seat" class="font-bold text-green-600">None</span></p>
+          <p>Total Price: <span id="total-price" class="font-bold text-green-600">0</span> BDT</p>
+          
+          <input type="text" id="coupon" placeholder="Enter Coupon Code" class="form-control my-3">
+          <button class="btn btn-success w-100" id="apply-coupon">Apply Coupon</button>
+          <p id="coupon-message" class="text-sm mt-2 h-4"></p>
+  
+          <hr class="my-4">
+
+          <!-- Payment Method Selection -->
+          <div id="payment-method-section" class="hidden">
+            <h4 class="font-semibold mb-3">Select Payment Method</h4>
+            <div class="grid grid-cols-3 gap-3 mb-4">
+              <button class="payment-method-btn border-2 p-3 rounded-lg hover:border-green-500 transition" data-method="bkash">
+                <div class="text-center">
+                  <div class="text-2xl mb-1">💳</div>
+                  <div class="text-sm font-semibold text-pink-600">bKash</div>
+                </div>
+              </button>
+              
+              <button class="payment-method-btn border-2 p-3 rounded-lg hover:border-green-500 transition" data-method="nagad">
+                <div class="text-center">
+                  <div class="text-2xl mb-1">💰</div>
+                  <div class="text-sm font-semibold text-orange-600">Nagad</div>
+                </div>
+              </button>
+              
+              <button class="payment-method-btn border-2 p-3 rounded-lg hover:border-green-500 transition" data-method="stripe">
+                <div class="text-center">
+                  <div class="text-2xl mb-1">💳</div>
+                  <div class="text-sm font-semibold text-blue-600">Card</div>
+                </div>
+              </button>
+            </div>
+
+            <!-- Mobile Payment Form (bKash/Nagad) -->
+            <div id="mobile-payment-section" class="hidden">
+              <form id="mobile-payment-form">
+                <input type="hidden" id="selected-payment-method">
+                
+                <div class="mb-3">
+                  <label for="mobile-name" class="block text-gray-700 mb-2">Full Name</label>
+                  <input type="text" id="mobile-name" placeholder="Enter your name" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="mobile-email" class="block text-gray-700 mb-2">Email</label>
+                  <input type="email" id="mobile-email" placeholder="Enter your email" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="mobile-phone" class="block text-gray-700 mb-2">Phone Number</label>
+                  <input type="tel" id="mobile-phone" placeholder="01XXXXXXXXX" pattern="01[0-9]{9}" class="form-control" required>
+                  <small class="text-gray-500">Format: 01XXXXXXXXX</small>
+                </div>
+                
+                <div class="alert alert-info text-sm mb-3">
+                  <strong>Payment Instructions:</strong><br>
+                  After booking, you'll receive payment instructions via SMS and email. Please complete the payment within 30 minutes to confirm your booking.
+                </div>
+                
+                <button type="submit" class="btn btn-success w-100">
+                  Confirm Booking
+                </button>
+              </form>
+            </div>
+
+            <!-- Stripe Payment Form -->
+            <div id="stripe-payment-section" class="hidden">
+              <form id="payment-form">
+                <div class="mb-3">
+                  <label for="name" class="block text-gray-700 mb-2">Full Name</label>
+                  <input type="text" id="name" placeholder="Enter your name" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="email" class="block text-gray-700 mb-2">Email</label>
+                  <input type="email" id="email" placeholder="Enter your email" class="form-control" required>
+                </div>
+
+                <div id="payment-element" class="my-4"></div>
+
+                <button id="submit-payment" class="btn btn-success w-100 mt-3">
+                  <span id="button-text">Pay Now</span>
+                  <span id="spinner" class="hidden">Processing...</span>
+                </button>
+                <p id="payment-message" class="text-red-500 text-sm mt-2 h-4"></p>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div id="booking-login-prompt" class="">
+          <h3 class="font-semibold mb-4">Book Your Seat</h3>
+          <p class="text-center text-gray-600">
+            Please <button id="login-prompt-btn" class="text-green-600 font-bold hover:underline">login</button> or 
+            <button id="signup-prompt-btn" class="text-green-600 font-bold hover:underline">sign up</button> 
+            to select and book your seats.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="destination" class="py-12 bg-white">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-bold text-gray-800">Track Your Route</h2>
+        <p class="text-gray-500 mt-2">Locate our counters and track your destination</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div class="space-y-6">
+          <div class="bg-gray-50 p-6 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="text-xl font-bold text-green-600 mb-2">Start: Dhaka Terminal</h3>
+            <p class="text-gray-600">Gabtoli Inter-District Bus Terminal</p>
+            <p class="text-sm text-gray-400">Mirpur, Dhaka, Bangladesh</p>
+            <p class="mt-2 font-semibold">📞 01700-000000</p>
+          </div>
+
+          <div class="bg-gray-50 p-6 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="text-xl font-bold text-green-600 mb-2">End: Sylhet Terminal</h3>
+            <p class="text-gray-600">Kadamtoli Bus Terminal</p>
+            <p class="text-sm text-gray-400">Station Road, Sylhet</p>
+            <p class="mt-2 font-semibold">📞 01700-000000</p>
+          </div>
+          
+          <button class="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition">
+            Get Directions on Phone
+          </button>
+        </div>
+
+        <div class="h-[400px] w-full bg-gray-200 rounded-2xl overflow-hidden shadow-lg relative">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.598346122602!2d90.3508129760777!3d23.797305978641196!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c0e96fce29dd%3A0x6ccd9e51aba9e64d!2sGabtoli%20Bus%20Terminal!5e0!3m2!1sen!2sbd!4v1709600000000!5m2!1sen!2sbd" 
+            width="100%" 
+            height="100%" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-black text-white py-10 px-6">
+    <div class="flex flex-col md:flex-row justify-between items-center">
+      <div>
+        <h3 class="text-2xl font-bold">P-Ticket</h3>
+        <p class="text-gray-400 mt-2">A digital platform to make your daily commuting better.</p>
+      </div>
+      <div class="mt-4 md:mt-0">
+        <p>Download our app</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Play Store" class="w-32 mt-2">
+      </div>
+    </div>
+    <hr class="my-4 border-gray-600" />
+    <div class="text-center text-gray-400 text-sm">
+      <p>© 2024 P-Ticket services limited | Terms & Conditions | Privacy Policy</p>
+    </div>
+  </footer>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal-overlay hidden">
+    <div class="modal-content bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+      <button class="modal-close absolute top-4 right-4 text-gray-600 hover:text-gray-900">&times;</button>
+      <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+      <form id="login-form">
+        <div class="mb-4">
+          <label for="login-email" class="block text-gray-700 mb-2">Email</label>
+          <input type="email" id="login-email" class="form-control w-full px-3 py-2 border rounded-md" required>
+        </div>
+        <div class="mb-6">
+          <label for="login-password" class="block text-gray-700 mb-2">Password</label>
+          <input type="password" id="login-password" class="form-control w-full px-3 py-2 border rounded-md" required>
+        </div>
+        <p id="login-error" class="text-red-500 text-sm mb-4 h-4"></p>
+        <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Sign Up Modal -->
+  <div id="signup-modal" class="modal-overlay hidden">
+    <div class="modal-content bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+      <button class="modal-close absolute top-4 right-4 text-gray-600 hover:text-gray-900">&times;</button>
+      <h2 class="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+      <form id="signup-form">
+        <div class="mb-4">
+          <label for="signup-name" class="block text-gray-700 mb-2">Full Name</label>
+          <input type="text" id="signup-name" class="form-control w-full px-3 py-2 border rounded-md" required>
+        </div>
+        <div class="mb-4">
+          <label for="signup-email" class="block text-gray-700 mb-2">Email</label>
+          <input type="email" id="signup-email" class="form-control w-full px-3 py-2 border rounded-md" required>
+        </div>
+        <div class="mb-6">
+          <label for="signup-password" class="block text-gray-700 mb-2">Password</label>
+          <input type="password" id="signup-password" class="form-control w-full px-3 py-2 border rounded-md" required>
+        </div>
+        <p id="signup-error" class="text-red-500 text-sm mb-4 h-4"></p>
+        <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
